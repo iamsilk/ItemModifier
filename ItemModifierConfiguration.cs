@@ -20,33 +20,33 @@ namespace ItemModifier
         [XmlElement(IsNullable = false)]
         public float? PlayerDamage;
         [XmlElement(IsNullable = false)]
-        public float? PlayerLegMultipler;
+        public float? PlayerLegMultiplier;
         [XmlElement(IsNullable = false)]
-        public float? PlayerArmMultipler;
+        public float? PlayerArmMultiplier;
         [XmlElement(IsNullable = false)]
-        public float? PlayerSpineMultipler;
+        public float? PlayerSpineMultiplier;
         [XmlElement(IsNullable = false)]
-        public float? PlayerSkullMultipler;
+        public float? PlayerSkullMultiplier;
 
         [XmlElement(IsNullable = false)]
         public float? ZombieDamage;
         [XmlElement(IsNullable = false)]
-        public float? ZombieLegMultipler;
+        public float? ZombieLegMultiplier;
         [XmlElement(IsNullable = false)]
-        public float? ZombieArmMultipler;
+        public float? ZombieArmMultiplier;
         [XmlElement(IsNullable = false)]
-        public float? ZombieSpineMultipler;
+        public float? ZombieSpineMultiplier;
         [XmlElement(IsNullable = false)]
-        public float? ZombieSkullMultipler;
+        public float? ZombieSkullMultiplier;
 
         [XmlElement(IsNullable = false)]
         public float? AnimalDamage;
         [XmlElement(IsNullable = false)]
-        public float? AnimalLegMultipler;
+        public float? AnimalLegMultiplier;
         [XmlElement(IsNullable = false)]
-        public float? AnimalSpineMultipler;
+        public float? AnimalSpineMultiplier;
         [XmlElement(IsNullable = false)]
-        public float? AnimalSkullMultipler;
+        public float? AnimalSkullMultiplier;
 
         [XmlElement(IsNullable = false)]
         public float? BarricadeDamage;

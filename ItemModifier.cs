@@ -88,19 +88,19 @@ namespace ItemModifier
             }
 
             if (modification.PlayerDamage.HasValue ||
-                modification.PlayerLegMultipler.HasValue || 
-                modification.PlayerArmMultipler.HasValue ||
-                modification.PlayerSpineMultipler.HasValue ||
-                modification.PlayerSkullMultipler.HasValue ||
+                modification.PlayerLegMultiplier.HasValue || 
+                modification.PlayerArmMultiplier.HasValue ||
+                modification.PlayerSpineMultiplier.HasValue ||
+                modification.PlayerSkullMultiplier.HasValue ||
                 modification.ZombieDamage.HasValue ||
-                modification.ZombieLegMultipler.HasValue ||
-                modification.ZombieArmMultipler.HasValue ||
-                modification.ZombieSpineMultipler.HasValue ||
-                modification.ZombieSkullMultipler.HasValue ||
+                modification.ZombieLegMultiplier.HasValue ||
+                modification.ZombieArmMultiplier.HasValue ||
+                modification.ZombieSpineMultiplier.HasValue ||
+                modification.ZombieSkullMultiplier.HasValue ||
                 modification.AnimalDamage.HasValue ||
-                modification.AnimalLegMultipler.HasValue ||
-                modification.AnimalSpineMultipler.HasValue ||
-                modification.AnimalSkullMultipler.HasValue ||
+                modification.AnimalLegMultiplier.HasValue ||
+                modification.AnimalSpineMultiplier.HasValue ||
+                modification.AnimalSkullMultiplier.HasValue ||
                 modification.BarricadeDamage.HasValue ||
                 modification.StructureDamage.HasValue ||
                 modification.VehicleDamage.HasValue || 
@@ -111,19 +111,19 @@ namespace ItemModifier
                 {
                     ItemWeaponAsset weaponAsset = asset as ItemWeaponAsset;
                     if (modification.PlayerDamage.HasValue) SetPlayerDamage(weaponAsset, modification.PlayerDamage.Value);
-                    if (modification.PlayerLegMultipler.HasValue) SetPlayerLegMultiplier(weaponAsset, modification.PlayerLegMultipler.Value);
-                    if (modification.PlayerArmMultipler.HasValue) SetPlayerArmMultiplier(weaponAsset, modification.PlayerArmMultipler.Value);
-                    if (modification.PlayerSpineMultipler.HasValue) SetPlayerSpineMultiplier(weaponAsset, modification.PlayerSpineMultipler.Value);
-                    if (modification.PlayerSkullMultipler.HasValue) SetPlayerSkullMultiplier(weaponAsset, modification.PlayerSkullMultipler.Value);
+                    if (modification.PlayerLegMultiplier.HasValue) SetPlayerLegMultiplier(weaponAsset, modification.PlayerLegMultiplier.Value);
+                    if (modification.PlayerArmMultiplier.HasValue) SetPlayerArmMultiplier(weaponAsset, modification.PlayerArmMultiplier.Value);
+                    if (modification.PlayerSpineMultiplier.HasValue) SetPlayerSpineMultiplier(weaponAsset, modification.PlayerSpineMultiplier.Value);
+                    if (modification.PlayerSkullMultiplier.HasValue) SetPlayerSkullMultiplier(weaponAsset, modification.PlayerSkullMultiplier.Value);
                     if (modification.ZombieDamage.HasValue) SetZombieDamage(weaponAsset, modification.ZombieDamage.Value);
-                    if (modification.ZombieLegMultipler.HasValue) SetZombieLegMultiplier(weaponAsset, modification.ZombieLegMultipler.Value);
-                    if (modification.ZombieArmMultipler.HasValue) SetZombieArmMultiplier(weaponAsset, modification.ZombieArmMultipler.Value);
-                    if (modification.ZombieSpineMultipler.HasValue) SetZombieSpineMultiplier(weaponAsset, modification.ZombieSpineMultipler.Value);
-                    if (modification.ZombieSkullMultipler.HasValue) SetZombieSkullMultiplier(weaponAsset, modification.ZombieSkullMultipler.Value);
+                    if (modification.ZombieLegMultiplier.HasValue) SetZombieLegMultiplier(weaponAsset, modification.ZombieLegMultiplier.Value);
+                    if (modification.ZombieArmMultiplier.HasValue) SetZombieArmMultiplier(weaponAsset, modification.ZombieArmMultiplier.Value);
+                    if (modification.ZombieSpineMultiplier.HasValue) SetZombieSpineMultiplier(weaponAsset, modification.ZombieSpineMultiplier.Value);
+                    if (modification.ZombieSkullMultiplier.HasValue) SetZombieSkullMultiplier(weaponAsset, modification.ZombieSkullMultiplier.Value);
                     if (modification.AnimalDamage.HasValue) SetAnimalDamage(weaponAsset, modification.AnimalDamage.Value);
-                    if (modification.AnimalLegMultipler.HasValue) SetAnimalLegMultiplier(weaponAsset, modification.AnimalLegMultipler.Value);
-                    if (modification.AnimalSpineMultipler.HasValue) SetAnimalSpineMultiplier(weaponAsset, modification.AnimalSpineMultipler.Value);
-                    if (modification.AnimalSkullMultipler.HasValue) SetAnimalSkullMultiplier(weaponAsset, modification.AnimalSkullMultipler.Value);
+                    if (modification.AnimalLegMultiplier.HasValue) SetAnimalLegMultiplier(weaponAsset, modification.AnimalLegMultiplier.Value);
+                    if (modification.AnimalSpineMultiplier.HasValue) SetAnimalSpineMultiplier(weaponAsset, modification.AnimalSpineMultiplier.Value);
+                    if (modification.AnimalSkullMultiplier.HasValue) SetAnimalSkullMultiplier(weaponAsset, modification.AnimalSkullMultiplier.Value);
                     if (modification.BarricadeDamage.HasValue) SetBarricadeDamage(weaponAsset, modification.BarricadeDamage.Value);
                     if (modification.StructureDamage.HasValue) SetStructureDamage(weaponAsset, modification.StructureDamage.Value);
                     if (modification.VehicleDamage.HasValue) SetVehicleDamage(weaponAsset, modification.VehicleDamage.Value);
