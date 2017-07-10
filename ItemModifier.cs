@@ -15,8 +15,16 @@ namespace ItemModifier
             internal static FieldInfo Width;
             internal static FieldInfo Height;
 
-            internal static FieldInfo Structure_Health;
             internal static FieldInfo Barricade_Health;
+            internal static FieldInfo Barricade_Explosion;
+
+            internal static FieldInfo Structure_Health;
+            internal static FieldInfo Structure_Explosion;
+
+            internal static FieldInfo Barrel_Braked;
+            internal static FieldInfo Barrel_Silenced;
+            internal static FieldInfo Barrel_Volume;
+            internal static FieldInfo Barrel_BallisticDrop;
         }
 
         protected override void Load()
@@ -30,11 +38,19 @@ namespace ItemModifier
             Fields.Width = type.GetField("_width", BindingFlags.NonPublic | BindingFlags.Instance);
             Fields.Height = type.GetField("_height", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            type = typeof(ItemStructureAsset);
-            Fields.Structure_Health = type.GetField("_health", BindingFlags.NonPublic | BindingFlags.Instance);
-
             type = typeof(ItemBarricadeAsset);
             Fields.Barricade_Health = type.GetField("_health", BindingFlags.NonPublic | BindingFlags.Instance);
+            Fields.Barricade_Explosion = type.GetField("_explosion", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            type = typeof(ItemStructureAsset);
+            Fields.Structure_Health = type.GetField("_health", BindingFlags.NonPublic | BindingFlags.Instance);
+            Fields.Structure_Explosion = type.GetField("_explosion", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            type = typeof(ItemBarrelAsset);
+            Fields.Barrel_BallisticDrop = type.GetField("_ballisticDrop", BindingFlags.NonPublic | BindingFlags.Instance);
+            Fields.Barrel_Braked = type.GetField("_isBraked", BindingFlags.NonPublic | BindingFlags.Instance);
+            Fields.Barrel_Silenced = type.GetField("_isSilenced", BindingFlags.NonPublic | BindingFlags.Instance);
+            Fields.Barrel_Volume = type.GetField("_volume", BindingFlags.NonPublic | BindingFlags.Instance);
 
             foreach (ItemModification modification in Configuration.Instance.Items)
             {
@@ -105,7 +121,8 @@ namespace ItemModifier
                 modification.StructureDamage.HasValue ||
                 modification.VehicleDamage.HasValue || 
                 modification.ResourceDamage.HasValue ||
-                modification.ObjectDamage.HasValue) // Isn't this pretty?
+                modification.ObjectDamage.HasValue ||
+                modification.Invulnerable.HasValue) // Isn't this pretty?
             {
                 if (asset is ItemWeaponAsset)
                 {
@@ -129,10 +146,71 @@ namespace ItemModifier
                     if (modification.VehicleDamage.HasValue) SetVehicleDamage(weaponAsset, modification.VehicleDamage.Value);
                     if (modification.ResourceDamage.HasValue) SetResourceDamage(weaponAsset, modification.ResourceDamage.Value);
                     if (modification.ObjectDamage.HasValue) SetObjectDamage(weaponAsset, modification.ObjectDamage.Value);
+                    if (modification.Invulnerable.HasValue) SetIsInvulnerable(weaponAsset, modification.Invulnerable.Value);
                 }
                 else
                 {
                     LogError("Item ID {0} isn't a weapon.", modification.ID);
+                }
+            }
+
+            if (modification.Caliber.HasValue || 
+                modification.Range.HasValue ||
+                modification.SpreadAim.HasValue ||
+                modification.SpreadHip.HasValue ||
+                modification.Muzzle.HasValue)
+            {
+                if (asset is ItemWeaponAsset)
+                {
+                    ItemGunAsset gunAsset = asset as ItemGunAsset;
+                    if (modification.Caliber.HasValue) SetCaliber(gunAsset, modification.Caliber.Value);
+                    if (modification.Range.HasValue) SetRange(gunAsset, modification.Range.Value);
+                    if (modification.SpreadAim.HasValue) SetSpreadAim(gunAsset, modification.SpreadAim.Value);
+                    if (modification.SpreadHip.HasValue) SetSpreadHip(gunAsset, modification.SpreadHip.Value);
+                    if (modification.Muzzle.HasValue) SetMuzzle(gunAsset, modification.Muzzle.Value);
+                }
+                else
+                {
+                    LogError("Item ID {0} isn't a gun.", modification.ID);
+                }
+            }
+
+            if (modification.Explosion.HasValue)
+            {
+                if (asset is ItemStructureAsset)
+                {
+                    SetExplosion(asset as ItemStructureAsset, modification.Explosion.Value);
+                }
+                else if (asset is ItemBarricadeAsset)
+                {
+                    SetExplosion(asset as ItemBarricadeAsset, modification.Explosion.Value);
+                }
+                else if (asset is ItemGunAsset)
+                {
+                    SetExplosion(asset as ItemGunAsset, modification.Explosion.Value);
+                }
+                else
+                {
+                    LogError("Item ID {0} doesn't have an explosion tag.");
+                }
+            }
+            
+            if (modification.BallisticDrop.HasValue ||
+                modification.Braked.HasValue ||
+                modification.Silenced.HasValue ||
+                modification.Volume.HasValue)
+            {
+                if (asset is ItemBarrelAsset)
+                {
+                    ItemBarrelAsset barrelAsset = asset as ItemBarrelAsset;
+                    if (modification.BallisticDrop.HasValue) SetBallisticDrop(barrelAsset, modification.BallisticDrop.Value);
+                    if (modification.Braked.HasValue) SetIsBraked(barrelAsset, modification.Braked.Value);
+                    if (modification.Silenced.HasValue) SetIsSilenced(barrelAsset, modification.Silenced.Value);
+                    if (modification.Volume.HasValue) SetVolume(barrelAsset, modification.Volume.Value);
+                }
+                else
+                {
+                    LogError("Item ID {0} isn't a barrel.");
                 }
             }
         }
@@ -147,7 +225,6 @@ namespace ItemModifier
             }
 
             Fields.Width.SetValue(asset, width);
-
             return true;
         }
 
@@ -160,7 +237,6 @@ namespace ItemModifier
             }
 
             Fields.Height.SetValue(asset, height);
-
             return true;
         }
         #endregion
@@ -175,7 +251,18 @@ namespace ItemModifier
             }
 
             Fields.Barricade_Health.SetValue(asset, health);
+            return true;
+        }
 
+        public static bool SetExplosion(ItemBarricadeAsset asset, ushort explosion)
+        {
+            if (Fields.Barricade_Explosion == null)
+            {
+                LogError("Setting explosion of Item ID {0}", asset.id);
+                return false;
+            }
+
+            Fields.Barricade_Explosion.SetValue(asset, explosion);
             return true;
         }
 
@@ -188,7 +275,18 @@ namespace ItemModifier
             }
 
             Fields.Structure_Health.SetValue(asset, health);
+            return true;
+        }
 
+        public static bool SetExplosion(ItemStructureAsset asset, ushort explosion)
+        {
+            if (Fields.Structure_Explosion == null)
+            {
+                LogError("Setting explosion of Item ID {0}", asset.id);
+                return false;
+            }
+
+            Fields.Structure_Explosion.SetValue(asset, explosion);
             return true;
         }
         #endregion
@@ -291,6 +389,100 @@ namespace ItemModifier
         public static bool SetObjectDamage(ItemWeaponAsset asset, float damage)
         {
             asset.objectDamage = damage;
+            return true;
+        }
+
+        public static bool SetIsInvulnerable(ItemWeaponAsset asset, bool isInvulnerable)
+        {
+            asset.isInvulnerable = isInvulnerable;
+            return true;
+        }
+        #endregion
+
+        #region Guns
+        public static bool SetCaliber(ItemGunAsset asset, ushort caliber)
+        {
+            asset.caliber = caliber;
+            return true;
+        }
+
+        public static bool SetRange(ItemGunAsset asset, float range)
+        {
+            asset.range = range;
+            return true;
+        }
+
+        public static bool SetSpreadAim(ItemGunAsset asset, float spread)
+        {
+            asset.spreadAim = spread;
+            return true;
+        }
+
+        public static bool SetSpreadHip(ItemGunAsset asset, float spread)
+        {
+            asset.spreadHip = spread;
+            return true;
+        }
+
+        public static bool SetMuzzle(ItemGunAsset asset, ushort muzzle)
+        {
+            asset.muzzle = muzzle;
+            return true;
+        }
+
+        public static bool SetExplosion(ItemGunAsset asset, ushort explosion)
+        {
+            asset.explosion = explosion;
+            return true;
+        }
+        #endregion
+
+        #region Barrels
+        public static bool SetBallisticDrop(ItemBarrelAsset asset, float ballisticDrop)
+        {
+            if (Fields.Barrel_BallisticDrop == null)
+            {
+                LogError("Setting ballistic drop of Item ID {0}", asset.id);
+                return false;
+            }
+
+            Fields.Barrel_BallisticDrop.SetValue(asset, ballisticDrop);
+            return true;
+        }
+
+        public static bool SetIsBraked(ItemBarrelAsset asset, bool isBraked)
+        {
+            if (Fields.Barrel_Braked == null)
+            {
+                LogError("Setting is braked of Item ID {0}", asset.id);
+                return false;
+            }
+
+            Fields.Barrel_Braked.SetValue(asset, isBraked);
+            return true;
+        }
+
+        public static bool SetIsSilenced(ItemBarrelAsset asset, bool isSilenced)
+        {
+            if (Fields.Barrel_Silenced == null)
+            {
+                LogError("Setting is silenced of Item ID {0}", asset.id);
+                return false;
+            }
+
+            Fields.Barrel_Silenced.SetValue(asset, isSilenced);
+            return true;
+        }
+
+        public static bool SetVolume(ItemBarrelAsset asset, float volume)
+        {
+            if (Fields.Barrel_Volume == null)
+            {
+                LogError("Setting volume of Item ID {0}", asset.id);
+                return true;
+            }
+
+            Fields.Barrel_Volume.SetValue(asset, volume);
             return true;
         }
         #endregion
