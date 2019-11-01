@@ -402,7 +402,7 @@ namespace ItemModifier
         #region Guns
         public static bool SetCaliber(ItemGunAsset asset, ushort caliber)
         {
-            asset.caliber = caliber;
+            asset.barrelID = caliber;
             return true;
         }
 
